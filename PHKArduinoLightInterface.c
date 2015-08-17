@@ -10,12 +10,15 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <stdio.h>
+#include "kmadd_common.h"
 
 #define SerialPortAddr "/dev/ttyUSB0"
 
 int serialPort = -1;
 
 void setupPort() {
+    KMADD_TRACE_WARN;
+    #if 0
     serialPort = open(SerialPortAddr, O_WRONLY|O_NOCTTY|O_NDELAY);
     printf("Serial Port: %d\n", serialPort);
     if (serialPort >= 0) {
@@ -46,18 +49,23 @@ void setupPort() {
         
         tcsetattr(serialPort, TCSANOW, &options);
     }
+    #endif
 }
 
 void startIdentify() {
-    write(serialPort, "-1", 3);
+    //write(serialPort, "-1", 3);
+    KMADD_TRACE_WARN;
 }
 
 void setLightStrength(int strengthLevel) {
+    #if 0
     strengthLevel = strengthLevel < 0? 0: strengthLevel;
     strengthLevel = strengthLevel > 255? 255: strengthLevel;
     char temp[6];
     int len = snprintf(temp, 6, "%d", strengthLevel);
     write(serialPort, temp, len);
+    #endif
+    KMADD_TRACE_WARN;
 }
 
 void setFanSpeed(int strengthLevel) {}
