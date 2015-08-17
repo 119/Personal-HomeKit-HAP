@@ -13,7 +13,7 @@
 #include <fstream>
 #include <errno.h>
 #include <strings.h>
-
+#include "kmadd_common.h"
 
 //Security
 extern "C" {
@@ -145,6 +145,7 @@ void *connectionLoop(void *argument) {
     int subSocket = *(int*)argument;ssize_t len;
     if (subSocket >= 0) {
         printf("Start Connect: %d\n", subSocket);
+        KMADD_TRACE_AT;
         
         do {
             char *buffer = new char[4096];
@@ -157,10 +158,12 @@ void *connectionLoop(void *argument) {
                      * The processo f pair-setup
                      */
                     
+                    KMADD_TRACE_AT;
                     handlePairSeup(*(int*)argument, buffer);
                     
                 }
                 else if (!strcmp(msg.directory, "pair-verify")){
+                    KMADD_TRACE_AT;
                     handlePairVerify(*(int*)argument, buffer);
                 }
             }
@@ -170,6 +173,7 @@ void *connectionLoop(void *argument) {
         } while (len > 0);
         
         close(*(int*)argument);
+        KMADD_TRACE_AT;
         printf("Stop Connect: %d\n", subSocket);
         
         *(int*)argument = -1;
@@ -186,6 +190,7 @@ void PHKNetworkIP::handleConnection() const {
         if (connection[i] == -1) {
             index = i;
             connection[index] = subSocket;
+            KMADD_TRACE_AT;
             pthread_create(&threads[index], NULL, connectionLoop, &connection[index]);
             break;
         }
